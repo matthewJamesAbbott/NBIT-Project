@@ -19,11 +19,9 @@ Stores receipt images used for testing and development.
 ## website: 
 The main application directory, containing Python files, templates, static files, and subdirectories for models and views.
 
-## auth.py: 
-Manages user authentication and registration.
+### auth.py: Manages user authentication and registration.
 
-## models.py: 
-Defines database models for receipts and users.
+### models.py: Defines database models for receipts and users.
 
 ## views.py: 
 Implements the core functionality of the web application, including uploading receipts, managing user data, and rendering pages.
