@@ -1,7 +1,7 @@
 # NBIT-Project
 Project Overview
 
-This project is developed as part of the third-year NBIT (Networking and Security, Business Information Systems, and Technology) course at Victoria University.
+This project is developed as part of the third-year NBIT (Bachelor of Information Technology) course at Victoria University.
 
 The primary objective of the project is to develop a system that processes receipt images using an API provided by Nanonets. The system utilizes an AI model trained with YOLO (You Only Look Once) and Tesseract specifically designed for recognizing and extracting information from receipts. While the accuracy of the model may vary, the project aims to enhance its capabilities through the integration of a database and user management features.
 Project Structure
