@@ -16,9 +16,9 @@ models.py: Defines database models for receipts and users.
 views.py: Implements the core functionality of the web application, including uploading receipts, managing user data, and rendering pages.
 static: Contains static files such as CSS, JavaScript, and image assets.
 templates: Holds HTML templates for rendering dynamic content.
-README.md: Provides information about the project and its components (you're currently reading it!).
+README.md: This document.
 requirements.txt: Lists the Python dependencies required for the project.
-start_server.sh: Shell script for starting the server.
+start_server.sh: Shell script for starting the flask server.
 
 Functionality
 
