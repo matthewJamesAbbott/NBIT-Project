@@ -1,2 +1,2 @@
 #!/bin/sh
-flask --app website run --host=192.168.122.25 --port=5000
+flask --app website run --host=127.0.0.1 --port=5000
