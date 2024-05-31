@@ -1,0 +1,6 @@
+python
+flask
+Flask-SQLAlchemy
+flask-login
+matplotlib
+

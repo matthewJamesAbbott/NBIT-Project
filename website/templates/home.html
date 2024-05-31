@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<h1 align="center">Receipts</h1>
+<ul class="list-group list-group-flush" id="receipts">
+<table class="editable table table-bordered">
+    <!-- (A) HEADER -->
+    <thead>
+        <tr>
+            <th>Merchant</th>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Date</th>
+            <th>Receipt Number</th>
+            <th>Action</th> <!-- New column for the button -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for receipt in user.receipts %}
+         <tr id="row_{{ receipt.id }}">
+            <td contenteditable="true">{{ receipt.merchant_name }}</td>
+            <td contenteditable="true">{{ receipt.item_name }}</td>
+            <td contenteditable="true">{{ receipt.price }}</td>
+            <td contenteditable="true">{{ receipt.quantity }}</td>
+            <td contenteditable="true">{{ receipt.date }}</td>
+            <td contenteditable="true">{{ receipt.receipt_number }}</td>
+            <td>
+                <!-- Button for the non-editable column -->
+                <button type="button" class="btn btn-danger" onclick="deleteItem({{ receipt.id }})">
+                    Delete
+                </button>
+		<button type="button" class="btn btn-primary" onclick="updateItem({{ receipt.id }})">
+                    Update
+                </button>
+	    </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</ul>
+<h2>Upload File</h2>
+<form action = "/upload" method = "POST"
+   enctype = "multipart/form-data">
+   <input type = "file" name = "file" />
+   <input type = "submit"/>
+</form>
+
+{% endblock %}

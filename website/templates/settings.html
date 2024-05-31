@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<h1 align="center">Dashboard Settings</h1>
+    <form method="post">
+        <label for="dropdown">Select Chart Type:</label>
+        <select name="dropdown" id="dropdown">
+            {% for option in options %}
+                <option value="{{ option }}" {% if selected_option == option %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+        </select>
+	<br>
+        <label for="dropdown">Select Colour Scheme:</label>
+        <select name="dropdown2" id="dropdown2">
+            {% for option2 in options2 %}
+                <option value="{{ option2 }}" {% if selected_option2 == option2 %}selected{% endif %}>{{ option2 }}</option>
+            {% endfor %}
+        </select>
+
+	<br>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

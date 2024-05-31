@@ -1,0 +1,30 @@
+/* (A) ENTIRE PAGE */
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+/* (B) EDITABLE TABLE */
+.editable {
+  border-collapse: collapse;
+}
+.editable th, .editable td {
+  text-align: left;
+  padding: 15px;
+}
+.editable thead {
+  color: #fff;
+  background: #0069D9;
+}
+.editable tbody tr:nth-child(even) {
+  background: #F8F2E8;
+}
+.editable td.edit {
+  background: #f8ff88;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
