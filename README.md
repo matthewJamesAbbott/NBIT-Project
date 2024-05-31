@@ -1,4 +1,4 @@
-## NBIT-Project
+# NBIT-Project
 
 # Project Overview
 
@@ -10,59 +10,59 @@ The primary objective of the project is to develop a system that processes recei
 
 The project repository consists of the following main components:
 
-# instance: 
+## instance: 
 Contains instance-specific configuration files.
 
-# receipts: 
+## receipts: 
 Stores receipt images used for testing and development.
 
-# website: 
+## website: 
 The main application directory, containing Python files, templates, static files, and subdirectories for models and views.
 
-# auth.py: 
+## auth.py: 
 Manages user authentication and registration.
 
-# models.py: 
+## models.py: 
 Defines database models for receipts and users.
 
-# views.py: 
+## views.py: 
 Implements the core functionality of the web application, including uploading receipts, managing user data, and rendering pages.
 
-# static: 
+## static: 
 Contains static files such as CSS, JavaScript, and image assets.
 
-# templates: 
+## templates: 
 Holds HTML templates for rendering dynamic content.
 
-# README.md: 
+## README.md: 
 This document.
 
-# requirements.txt: 
+## requirements.txt: 
 Lists the Python dependencies required for the project.
 
-# start_server.sh: 
+## start_server.sh: 
 Shell script for starting the flask server.
 
 # Functionality
 
-# The key functionalities of the project include:
+The key functionalities of the project include:
 
-# Receipt Processing: 
+## Receipt Processing: 
 Users can upload receipt images through the web interface, which are then sent to the Nanonets API for processing using the AI model. Extracted information such as item names, prices, quantities, merchant names, dates, and receipt numbers are stored in the database.
 
-# User Management: 
+## User Management: 
 The system includes user authentication and registration functionalities. Each user has their own profile and can only access and manage their own data.
 
-# Inline Editing: 
+## Inline Editing: 
 Users can interactively edit receipt data through a dynamic table interface in the web application. Changes made are instantly reflected in the database under the user's policy.
 
-# Dashboard: 
+## Dashboard: 
 Provides users with a graphical representation of their receipt data, including options to generate pie charts, bar charts, and horizontal bar charts based on merchant names and item prices.
 
-# Settings: 
+## Settings: 
 Users can customize the style of plots generated in the dashboard using predefined themes.
 
-# Contributors
+## Contributors
 
 Matthew Abbott,
 Taylah Ryhanen,
