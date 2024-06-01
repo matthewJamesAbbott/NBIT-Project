@@ -1,6 +1,7 @@
-python
+requests
 flask
-Flask-SQLAlchemy
+sqlalchemy
+flask-sqlalchemy
 flask-login
 matplotlib
 
