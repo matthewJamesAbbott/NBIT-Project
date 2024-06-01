@@ -87,3 +87,9 @@ chmod +x start_server.sh
 ./start_server.sh
 
 Note: Before allowing outside access to the web application, ensure to modify the IP address and/or port number in the start_server.sh script as needed. It is not advised to expose the application directly using the current setup with Python Flask. Instead, it is recommended to use a WSGI server to run the application.
+
+# User Manual
+
+User Manual is in the root of the repository named NBIT-Project-manual.pdf
+
+https://github.com/matthewJamesAbbott/NBIT-Project/blob/main/NBIT-Project-manual.pdf
