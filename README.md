@@ -51,3 +51,39 @@ Settings: Users can customize the style of plots generated in the dashboard usin
 Matthew Abbott,
 Taylah Ryhanen,
 William Chairundin
+
+# Installation
+
+## Prerequisites
+
+Before installing, make sure you have the following:
+
+Python 3.x
+
+pip (Python package installer, usually included with Python)
+
+## Steps
+
+## Clone the repository:
+
+git clone https://github.com/your-username/your-project.git
+
+## Navigate to the project directory:
+
+cd NBIT-Project
+
+## Install dependencies:
+
+pip install -r requirements.txt
+
+## Run the application:
+
+### Make the startup script executable:
+
+chmod +x start_server.sh
+
+### Then start the server:
+
+./start_server.sh
+
+Note: Before allowing outside access to the web application, ensure to modify the IP address and/or port number in the start_server.sh script as needed. It is not advised to expose the application directly using the current setup with Python Flask. Instead, it is recommended to use a WSGI server to run the application.
