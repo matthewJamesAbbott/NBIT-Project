@@ -62,11 +62,11 @@ Python 3.x
 
 pip (Python package installer, usually included with Python)
 
-## Steps
+_______________________
 
 ## Clone the repository:
 
-git clone https://github.com/your-username/your-project.git
+git clone https://github.com/matthewJamesAbbott/NBIT-Project
 
 ## Navigate to the project directory:
 
