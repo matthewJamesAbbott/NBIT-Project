@@ -4,7 +4,22 @@ window.addEventListener("DOMContentLoaded", () => {
     cell.ondblclick = () => editable.edit(cell);
   }
 });
+window.addEventListener('load', function() {
+  // Get the viewport height and width
+  const vh = window.innerHeight;
+  const vw = window.innerWidth;
 
+  // Get the body element
+  const body = document.body;
+
+  // Set the body dimensions to match the viewport
+  body.style.width = vw  + 'px';
+  body.style.height = vh + 'px';
+
+  // Set the body font size based on viewport width
+  // const fontSize = vw * 0.03; // Adjust the multiplier as needed
+  // body.style.fontSize = fontSize + 'px';
+});
 var editable = {
   // (B) PROPERTIES
   selected : null,  // current selected cell
@@ -55,6 +70,8 @@ var editable = {
     editable.selected.classList.remove("edit");
     editable.selected = null;
     editable.value = "";
+
+
 
     // (D5) DO WHATEVER YOU NEED
     if (evt !== false) {

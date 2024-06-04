@@ -3,7 +3,7 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   # means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
-
+import re
 
 auth = Blueprint('auth', __name__)
 
@@ -12,6 +12,13 @@ auth = Blueprint('auth', __name__)
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
+        # Remove any HTML tags using regex
+        email = re.sub(r'<[^>]*>', '', email)
+        # Escape special characters to prevent SQL injection
+        email = email.replace("'", "''")
+        email = email.replace('"', '""')
+
+
         password = request.form.get('password')
 
         # test users login data and either login user or deny access
@@ -42,7 +49,19 @@ def logout():
 def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
+        # Remove any HTML tags using regex
+        email = re.sub(r'<[^>]*>', '', email)
+        # Escape special characters to prevent SQL injection
+        email = email.replace("'", "''")
+        email = email.replace('"', '""')
+
         first_name = request.form.get('firstName')
+        # Remove any HTML tags using regex
+        first_name = re.sub(r'<[^>]*>', '', first_name)
+        # Escape special characters to prevent SQL injection
+        first_name = first_name.replace("'", "''")
+        first_name = first_name.replace('"', '""')
+
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 

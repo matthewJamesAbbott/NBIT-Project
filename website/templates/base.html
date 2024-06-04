@@ -19,33 +19,30 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='edit-table.css') }}">
     <script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <script defer src="{{ url_for('static', filename='edit-table.js') }}"></script>
+<style>
+    .menu {
+        display: flex; /* Use flexbox */
+	width: 100%;
+    }
+
+    .menu a {
+        margin-right: 10px; /* Add some space between links */
+    }
+</style>
   </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbar"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbar">
-        <div class="navbar-nav">
+<body>
+	      <div class="menu" style="background-color: #000000; color: #333;">
           {% if user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-	  <a class="nav-item nav-link" id="dashboard" href="/dashboard">Dashboard</a>
+          <a class="nav-item nav-link" id="dashboard" href="/dashboard">Dashboard</a>
           <a class="nav-item nav-link" id="settings" href="/settings">Settings</a>
 
           {% else %}
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
           <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
           {% endif %}
-        </div>
       </div>
-    </nav>
-
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %} {% if category ==
     'error' %}
