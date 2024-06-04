@@ -78,9 +78,9 @@ pip install -r requirements.txt
 
 ## Insert Nanonets key into views.py
 
-cd website nano views.py
+nano website/views.py
 replace INSERT KEY HERE with nanonets key save file and exit
-cd ..
+
 
 ## Run the application:
 
