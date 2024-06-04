@@ -296,9 +296,9 @@ def dashboard():
         plt.close()
     elif session.get('selected_option') == "Horizontal Bar Chart":
         plt.barh(names, Ylist)
-        plt.xlabel('Prices')
-        plt.ylabel('Merchant Name')
-        plt.title('Horizontal Bar Chart of Prices by Merchant')
+        plt.xlabel(Ylabel)
+        plt.ylabel(Xlabel)
+        plt.title('Horizontal Bar Chart of ' + Ylabel + ' by '+ Xlabel)
         plt.savefig('./website/static/images/chart.png', bbox_inches="tight")
         plt.close()
 
