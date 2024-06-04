@@ -56,7 +56,7 @@ def upload_file():
         data = {'file': open('receipts/' + filename, 'rb')}
 
         # send saved file to API with authentication key and save JSON reply
-        response = requests.post(url, auth=requests.auth.HTTPBasicAuth('replace with nano nets key', ''), files=data)
+        response = requests.post(url, auth=requests.auth.HTTPBasicAuth('INSERT KEY HERE', ''), files=data)
        
         # begin the text juggle to extract the right json data
         price_list = []
