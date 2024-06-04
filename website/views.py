@@ -10,12 +10,14 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('SVG')
 import seaborn as sns
+import re
 
 # instantiate blueprint for website
 views = Blueprint('views', __name__)
 options = ['Pie Chart', 'Bar Chart', 'Horizontal Bar Chart']
 options2 = ['Classic', 'Solarize_Light2', 'Dark Background', 'BMH', 'Fast', 'Fivethirtyeight', 'Ggplot', 'Grayscale', 'Tableau-colorblind10', 'Classic_test_patch']
-
+options3 = ['Merchant', 'Item', 'Date', 'Receipt Number']
+options4 = ['Price', 'Quantity']
 # endpoint for root of webpage
 @views.route('/', methods=['GET', 'POST'])
 @login_required # yes you have to login to come and play here ;)
@@ -45,23 +47,24 @@ def upload_file():
     if 'file' in request.files:
         file = request.files['file']
         filename = secure_filename(file.filename)
-        file.save('./' + filename)
+        file.save('./receipts/' + filename)
         
-        # set API access url
+        # set API access url and model
         url = 'https://app.nanonets.com/api/v2/OCR/Model/728b9baa-823f-4883-a452-1c0301f21361/LabelFile/?async=false'
 
         # open saved file
-        data = {'file': open(filename, 'rb')}
+        data = {'file': open('receipts/' + filename, 'rb')}
 
         # send saved file to API with authentication key and save JSON reply
-        response = requests.post(url, auth=requests.auth.HTTPBasicAuth('place nanonet key here', ''), files=data)
+        response = requests.post(url, auth=requests.auth.HTTPBasicAuth('replace with nano nets key', ''), files=data)
        
         # begin the text juggle to extract the right json data
         price_list = []
         item_list = []
         quantity_list = []
         receipt_list = response.text.split(',') # split the json into an array using , as delimiter
-        
+        Receipt_Number = 0
+
         # take the Merchant_Name, Receipt_Number, Date, Description, Price and Quantity from array and append to individual arrays 
         for position in [position for position, receipt_data in enumerate(receipt_list) if receipt_data == '\"label\":\"Merchant_Name\"']:
            merch = receipt_list[position + 6].split(':')
@@ -78,8 +81,14 @@ def upload_file():
            item_list.append(ite2.replace('\"', ''))
         for position in [position for position, receipt_data in enumerate(receipt_list) if receipt_data == '\"label\":\"Price\"']:
            pri = receipt_list[position + 6].split(':')
-           pri2 = pri[1].replace("EACH", "")
+           if "EACH" in pri[1]:
+              pri2 = pri[1].replace("EACH", "")
            price_list.append(pri2.replace('\"', ''))
+        for postion in [postion for postion, receipt_data in enumerate(receipt_list) if receipt_data == '\"label\":\"Line_Amount\"']:
+           pri = receipt_list[postion + 6].split(':')
+           pri2 = pri[1] 
+           price_list.append(pri2.replace('\"', ''))
+
         for position in [position for position, receipt_data in enumerate(receipt_list) if receipt_data == '\"label\":\"Quantity\"']:
            quan = receipt_list[position + 6].split(':')
            quantity_list.append(quan[1].replace('\"', ''))
@@ -97,12 +106,43 @@ def upload_file():
         print(len(price_list))
         print(len(item_list))
         print(len(quantity_list))
+        # Remove any HTML tags using regex
+        Date = re.sub(r'<[^>]*>', '', Date)
+        # Escape special characters to prevent SQL injection
+        Date = Date.replace("'", "''")
+        Date = Date.replace('"', '""')
+        # Remove any HTML tags using regex
+        Receipt_Number = re.sub(r'<[^>]*>', '', Receipt_Number)
+        # Escape special characters to prevent SQL injection
+        Receipt_Number = Receipt_Number.replace("'", "''")
+        Receipt_Number = Receipt_Number.replace('"', '""')
+        # Remove any HTML tags using regex
+        Merchant_Name = re.sub(r'<[^>]*>', '', Merchant_Name)
+        # Escape special characters to prevent SQL injection
+        Merchant_Name = Merchant_Name.replace("'", "''")
+        Merchant_Name = Merchant_Name.replace('"', '""')
+        # Remove any HTML tags using regex
+        filename = re.sub(r'<[^>]*>', '', filename)
+        # Escape special characters to prevent SQL injection
+        filename = filename.replace("'", "''")
+        filename = filename.replace('"', '""')
 
         # add new receipt to receipt database
         for item in range(len(item_list)):
-           new_item = Receipt(user_id=current_user.id, date=Date, receipt_number=Receipt_Number, merchant_name=Merchant_Name, price=price_list[item], item_name=item_list[item], quantity=quantity_list[item])
-           db.session.add(new_item) 
-           db.session.commit()
+            # Remove any HTML tags using regex
+            price_list[item] = re.sub(r'<[^>]*>', '', price_list[item])
+            # Escape special characters to prevent SQL injection
+            price_list[item] = price_list[item].replace("'", "''")
+            price_list[item] = price_list[item].replace('"', '""')
+            # Remove any HTML tags using regex
+            quantity_list[item] = re.sub(r'<[^>]*>', '', quantity_list[item])
+            # Escape special characters to prevent SQL injection
+            quantity_list[item] = quantity_list[item].replace("'", "''")
+            quantity_list[item] = quantity_list[item].replace('"', '""')
+
+            new_item = Receipt(user_id=current_user.id, date=Date, receipt_number=Receipt_Number, merchant_name=Merchant_Name, price=price_list[item], item_name=item_list[item], quantity=quantity_list[item], file_name=filename)
+            db.session.add(new_item) 
+            db.session.commit()
 
         flash('Receipt added!', category='success')
 
@@ -113,17 +153,9 @@ def upload_file():
 # endpoint for dashboard 
 @views.route('/dashboard', methods=['GET'])
 def dashboard():
-
+    Ylist = []
+    names = []
     # save merchant name and item pricing to dictionary
-    results = db.session.query(Receipt.merchant_name, Receipt.price).filter_by(user_id=current_user.id).all()
-    merchant_names, prices = zip(*results)
-    new_prices = []
-    
-    # clean up input price data from JSON so as to be a number
-    for price in prices:
-        cleaned_price = price.replace(' ', '').replace('$', '')
-        integer_price = float(cleaned_price)
-        new_prices.append(integer_price)
     plt.rcParams.update(plt.rcParamsDefault) # setup plot of data with matplotlib
     plt.rcParams.update({'figure.autolayout': True}) 
 
@@ -148,26 +180,122 @@ def dashboard():
         plt.style.use("tableau-colorblind10")
     elif session.get('selected_option2') == "Classic_test_patch":
         plt.style.use("_classic_test_patch")
+    Xlabel = 'blank'
+    Ylabel ='blank'
+    print(session.get('selected_option4'))
+    if session.get('selected_option4') == "Price":
+        Ylabel = 'Prices'
+        print("prices")
+        # select X axis label based on settings endpoint
+        if session.get('selected_option3') == "Merchant":
+            Xlabel = 'Merchant Names'
+            results = db.session.query(Receipt.merchant_name, Receipt.price).filter_by(user_id=current_user.id).all()
+            names, values = zip(*results)
+            YList = []
+            # clean up input price data from JSON so as to be a number
+            for value in values:
+                cleaned_value = value.replace(' ', '').replace('$', '')
+                integer_value = float(cleaned_value)
+                Ylist.append(integer_value)
+        elif session.get('selected_option3') == 'Item':
+            Xlabel = 'Item Names'
+            results = db.session.query(Receipt.item_name, Receipt.price).filter_by(user_id=current_user.id).all()
+            names, values = zip(*results)
+            YList = []
+            # clean up input price data from JSON so as to be a number
+            for value in values:
+                cleaned_value = value.replace(' ', '').replace('$', '')
+                integer_value = float(cleaned_value)
+                Ylist.append(integer_value)
+        elif session.get('selected_option3') == 'Date':
+            Xlabel = 'Dates'
+            results = db.session.query(Receipt.date, Receipt.price).filter_by(user_id=current_user.id).all()
+            names, values = zip(*results)
+            YList = []
+            # clean up input price data from JSON so as to be a number
+            for value in values:
+                cleaned_value = value.replace(' ', '').replace('$', '')
+                integer_value = float(cleaned_value)
+                Ylist.append(integer_value)
+        elif session.get('selected_option3') == 'Receipt Number':
+            Xlabel = 'Receipt Numbers'
+            results = db.session.query(Receipt.receipt_number, Receipt.price).filter_by(user_id=current_user.id).all()
+            names, values = zip(*results)
+            YList = []
+            # clean up input price data from JSON so as to be a number
+            for value in values:
+                cleaned_value = value.replace(' ', '').replace('$', '')
+                integer_value = float(cleaned_value)
+                Ylist.append(integer_value)
 
+    elif session.get('selected_option4') == 'Quantity':
+        Ylabel = 'Quantities'
+        # select X axis label based on settings endpoint
+        if session.get('selected_option3') == 'Merchant':
+            Xlabel = 'Merchant Names'
+            results = db.session.query(Receipt.merchant_name, Receipt.quantity).filter_by(user_id=current_user.id).all()
+            names, values = zip(*results)
+            YList = []
+            # clean up input price data from JSON so as to be a number
+            for value in values:
+                cleaned_value = value.replace(' ', '').replace('$', '')
+                integer_value = float(cleaned_value)
+                Ylist.append(integer_value)
+        elif session.get('selected_option3') == 'Item':
+            Xlabel = 'Item Names'
+            results = db.session.query(Receipt.item_name, Receipt.quantity).filter_by(user_id=current_user.id).all()
+            names, values = zip(*results)
+            YList = []
+            # clean up input price data from JSON so as to be a number
+            for value in values:
+                cleaned_value = value.replace(' ', '').replace('$', '')
+                integer_value = float(cleaned_value)
+                Ylist.append(integer_value)
+        elif session.get('selected_option3') == 'Date':
+            Xlabel = 'Dates'
+            results = db.session.query(Receipt.date, Receipt.quantity).filter_by(user_id=current_user.id).all()
+            names, values = zip(*results)
+            YList = []
+            # clean up input price data from JSON so as to be a number
+            for value in values:
+                cleaned_value = value.replace(' ', '').replace('$', '')
+                integer_value = float(cleaned_value)
+                Ylist.append(integer_value)
+        elif session.get('selected_option3') == 'Receipt Number':
+            Xlabel = 'Receipt Numbers'
+            results = db.session.query(Receipt.receipt_number, Receipt.quantity).filter_by(user_id=current_user.id).all()
+            names, values = zip(*results)
+            YList = []
+            # clean up input price data from JSON so as to be a number
+            for value in values:
+                cleaned_value = value.replace(' ', '').replace('$', '')
+                integer_value = float(cleaned_value)
+                Ylist.append(integer_value)
+
+
+
+    user_agent = request.headers.get('User-Agent')
+    user_agent = user_agent.lower()
+    if "iphone" or "android" in user_agent:
+        plt.figure(figsize=(4,4))
+    else:
+        plt.figure(figsize=(8,8))
     # plot and save file to server
     if session.get('selected_option') == "Pie Chart":
 
-        plt.figure(figsize=(8,8))
-        plt.pie(new_prices, labels=merchant_names, autopct='%1.1f%%')
-        plt.title('Pie Chart of Prices by Merchant')
+        plt.pie(Ylist, labels=names, autopct='%1.1f%%')
+        plt.title('Pie Chart of ' + Xlabel + ' by ' + Ylabel)
         plt.savefig('./website/static/images/chart.png', bbox_inches="tight")
         plt.close()
     elif session.get('selected_option') == "Bar Chart":
-        plt.figure(figsize=(8,8))
-        plt.bar(merchant_names, new_prices)
-        plt.xlabel('Merchant Names')
-        plt.ylabel('Prices')
-        plt.title('Bar Chart of Prices by Merchant')
+        plt.bar(names, Ylist)
+        plt.xlabel(Xlabel)
+        plt.ylabel(Ylabel)
+        plt.title('Bar Chart of ' + Xlabel + ' by ' + Ylabel)
         plt.savefig('./website/static/images/chart.png', bbox_inches="tight")
         plt.close()
     elif session.get('selected_option') == "Horizontal Bar Chart":
-        plt.figure(figsize=(8,8))
-        plt.barh(merchant_names, new_prices)
+        plt.barh(names, Ylist)
         plt.xlabel('Prices')
         plt.ylabel('Merchant Name')
         plt.title('Horizontal Bar Chart of Prices by Merchant')
@@ -181,15 +309,21 @@ def dashboard():
 def settings():
     selected_option = None
     selected_option2 = None
+    selected_option3 = None
+    selected_option4 = None
     if request.method == 'POST':
 
         # Get the selected option from the form
         selected_option = request.form.get('dropdown')
         selected_option2 = request.form.get('dropdown2')
+        selected_option3 = request.form.get('dropdown3')
+        selected_option4 = request.form.get('dropdown4')
         session['selected_option'] = selected_option
         session['selected_option2'] = selected_option2
+        session['selected_option3'] = selected_option3
+        session['selected_option4'] = selected_option4
 
-    return render_template('settings.html', options=options, options2=options2, selected_option=selected_option, selected_option2=selected_option2, user=current_user)
+    return render_template('settings.html', options=options, options2=options2, selected_option=selected_option, selected_option2=selected_option2, options3=options3, selected_option3=selected_option3, options4=options4, selected_option4=selected_option4, user=current_user)
 
 # endpoint for updating receipt database from changes made in the javascript table in the home template
 @views.route('/update-item', methods=['POST'])
@@ -197,12 +331,36 @@ def update_data():
     print("in update function")
     item_data = json.loads(request.data)  # this function expects a JSON from the INDEX.js file
     itemId = item_data['itemId']
-    updated_merchant_name = item_data['merchant_name']  
-    updated_item_name = item_data['item_name']
-    updated_price = item_data['price']
-    updated_quantity = item_data['quantity']
-    updated_date = item_data['date']
-    updated_receipt_number = item_data['receipt_number']
+    # Remove any HTML tags using regex
+    updated_merchant_name = re.sub(r'<[^>]*>', '', item_data['merchant_name'])
+    # Escape special characters to prevent SQL injection
+    updated_merchant_name = updated_merchant_name.replace("'", "''")
+    updated_merchant_name = updated_merchant_name.replace('"', '""')
+    # Remove any HTML tags using regex
+    updated_item_name = re.sub(r'<[^>]*>', '', item_data['item_name'])
+    # Escape special characters to prevent SQL injection
+    updated_item_name = updated_item_name.replace("'", "''")
+    updated_item_name = updated_item_name.replace('"', '""')
+    # Remove any HTML tags using regex
+    updated_price = re.sub(r'<[^>]*>', '', item_data['price'])
+    # Escape special characters to prevent SQL injection
+    updated_price = updated_price.replace("'", "''")
+    updated_price = updated_price.replace('"', '""')
+    # Remove any HTML tags using regex
+    updated_quantity = re.sub(r'<[^>]*>', '', item_data['quantity'])
+    # Escape special characters to prevent SQL injection
+    updated_quantity = updated_quantity.replace("'", "''")
+    updated_quantity = updated_quantity.replace('"', '""')
+    # Remove any HTML tags using regex
+    updated_date = re.sub(r'<[^>]*>', '', item_data['date'])
+    # Escape special characters to prevent SQL injection
+    updated_date = updated_date.replace("'", "''")
+    updated_date = updated_date.replace('"', '""')
+    # Remove any HTML tags using regex
+    updated_receipt_number = re.sub(r'<[^>]*>', '', item_data['receipt_number'])
+    # Escape special characters to prevent SQL injection
+    updated_receipt_number = updated_receipt_number.replace("'", "''")
+    updated_receipt_number = updated_receipt_number.replace('"', '""')
 
     receipt = Receipt.query.get(itemId)
     print(updated_merchant_name)
@@ -219,3 +377,4 @@ def update_data():
         db.session.commit()
 
     return jsonify({})
+
