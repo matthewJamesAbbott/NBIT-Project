@@ -1,0 +1,7 @@
+{% extends "base.html" %} {% block title %}User Settings{% endblock %} {% block content
+%}
+<h1>User Settings</h1>
+<p>Please select an option below:</p>
+<button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for('auth.change_password') }}'">Change Password</button>
+<button type="button" class="btn btn-danger" onclick="window.location.href='{{ url_for('auth.delete_account') }}'">Delete Account</button>
+{% endblock %}

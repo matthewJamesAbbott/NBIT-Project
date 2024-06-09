@@ -26,6 +26,12 @@ options4 = ['Price', 'Quantity']
 def home():
    return render_template("home.html", user=current_user)
 
+# endpoint for user settings
+@views.route('/user-settings', methods=['GET'])
+def user_settings():
+    return render_template("user_settings.html", user=current_user)
+
+
 # endpoint for deleting items from receipt database
 @views.route('/delete-item', methods=['POST'])
 def delete_item():  
@@ -279,7 +285,7 @@ def dashboard():
     if "iphone" or "android" in user_agent:
         plt.figure(figsize=(4,4))
     else:
-        plt.figure(figsize=(8,8))
+        plt.figure(figsize=(16,16))
     # plot and save file to server
     if session.get('selected_option') == "Pie Chart":
 
