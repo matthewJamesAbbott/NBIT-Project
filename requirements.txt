@@ -1,4 +1,3 @@
-python
 flask
 Flask-SQLAlchemy
 flask-login
