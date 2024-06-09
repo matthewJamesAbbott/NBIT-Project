@@ -82,6 +82,14 @@ nano website/views.py
 
 replace INSERT KEY HERE with nanonets key save file and exit
 
+## Insert Gmail address and app key
+
+nano websites/auth.py
+
+replace your_email@gmail.con with your email address
+
+replace your_app_key with your generated gmail app key
+
 ## Run the application:
 
 ### Make the startup script executable:
