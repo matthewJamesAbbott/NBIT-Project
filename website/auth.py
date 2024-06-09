@@ -5,8 +5,9 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   # means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
-import re
+import smtplib
 from redmail import gmail
+import re
 
 auth = Blueprint('auth', __name__)
 
@@ -21,13 +22,12 @@ def login():
         email = email.replace("'", "''")
         email = email.replace('"', '""')
 
-
         password = request.form.get('password')
 
         # test users login data and either login user or deny access
         user = User.query.filter_by(email=email).first()
         if user:
-            if check_password_hash(user.password, password): # hash given password then test against encryprted hash in database
+            if check_password_hash(user.password, password): # hash given password then test against encrypeted hash in database
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
@@ -158,8 +158,8 @@ def forgot_password():
             user.password = generate_password_hash(temp, method='pbkdf2:sha256')
             db.session.commit()
             # send email with temporary password
-            gmail.username = 'your_address@gmail.com' # Your Gmail address
-            gmail.password = 'your_app_key' # Your App Passkey
+            gmail.username = 'your_email@gmail.com' # Your Gmail address
+            gmail.password = 'your_app_key' # Your Gmail App Key
 
             # And then you can send emails
             gmail.send(
@@ -173,3 +173,6 @@ def forgot_password():
 
 
     return render_template("forgot_password.html", user=current_user)
+
+
+

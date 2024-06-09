@@ -2,10 +2,12 @@
 %}
 <h1 align="center">Receipts</h1>
 <ul class="list-group list-group-flush" id="receipts">
-<table class="editable table table-bordered">
+
+<div style="overflow-x:auto;">
+	<table class="editable table table-sm table-bordered">
     <!-- (A) HEADER -->
     <thead>
-        <tr>
+  <tr>
             <th>Merchant</th>
             <th>Item</th>
             <th>Price</th>
@@ -37,7 +39,7 @@
         {% endfor %}
     </tbody>
 </table>
-
+</div>
 </ul>
 <h2>Upload File</h2>
 <form action = "/upload" method = "POST"
@@ -45,5 +47,4 @@
    <input type = "file" name = "file" />
    <input type = "submit"/>
 </form>
-
 {% endblock %}

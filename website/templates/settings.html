@@ -15,8 +15,20 @@
                 <option value="{{ option2 }}" {% if selected_option2 == option2 %}selected{% endif %}>{{ option2 }}</option>
             {% endfor %}
         </select>
-
 	<br>
+	<label for="dropdown">X Co-ordinate:</label>
+	<select name="dropdown3" id="dropdown3">
+	    {% for option3 in options3 %}
+	        <option value"{{ option3 }}" {% if selected_option3 == option3 %}selected{% endif %}>{{ option3 }}</option>
+	    {% endfor %}
+	</select>
+	<br>
+	<label for="drowdown">Y Co-ordinate:</label>
+	<select name="dropdown4" id="dropdown4">
+	    {% for option4 in options4 %}
+	        <option value"{{ option4 }}" {% if selected_option4 == option4 %}selected{% endif %}>{{ option4 }}</option>
+	    {% endfor %}
+	</select>
         <input type="submit" value="Submit">
     </form>
 {% endblock %}
