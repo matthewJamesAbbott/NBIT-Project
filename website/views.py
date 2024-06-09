@@ -289,8 +289,12 @@ def dashboard():
     # plot and save file to server
     if session.get('selected_option') == "Pie Chart":
 
-        plt.pie(Ylist, labels=names, autopct='%1.1f%%')
-        plt.title('Pie Chart of ' + Xlabel + ' by ' + Ylabel)
+        plt.pie(Ylist, labels=names, autopct=lambda p : '{:.0f}%'.format(p),
+        startangle=90, pctdistance=0.85, labeldistance=1.1,
+        textprops={'size': 'smaller', 'rotation_mode': 'anchor'})
+        plt.axis('equal')
+
+        plt.suptitle('Pie Chart of ' + Xlabel + ' by ' + Ylabel, y=1.1)
         plt.savefig('./website/static/images/chart.png', bbox_inches="tight")
         plt.close()
     elif session.get('selected_option') == "Bar Chart":
@@ -298,7 +302,7 @@ def dashboard():
         plt.xticks(rotation=45, ha='right', fontsize=6)
         plt.xlabel(Xlabel)
         plt.ylabel(Ylabel)
-        plt.title('Bar Chart of ' + Xlabel + ' by ' + Ylabel)
+        plt.suptitle('Bar Chart of ' + Xlabel + ' by ' + Ylabel, y=1.1)
         plt.savefig('./website/static/images/chart.png', bbox_inches="tight")
         plt.close()
     elif session.get('selected_option') == "Horizontal Bar Chart":
@@ -307,7 +311,7 @@ def dashboard():
         plt.yticks(fontsize=6)
         plt.xlabel(Ylabel)
         plt.ylabel(Xlabel)
-        plt.title('Horizontal Bar Chart of ' + Ylabel + ' by '+ Xlabel)
+        plt.suptitle('Horizontal Bar Chart of ' + Ylabel + ' by '+ Xlabel, y=1.1)
         plt.savefig('./website/static/images/chart.png', bbox_inches="tight")
         plt.close()
 
