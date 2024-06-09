@@ -295,6 +295,7 @@ def dashboard():
         plt.close()
     elif session.get('selected_option') == "Bar Chart":
         plt.bar(names, Ylist)
+        plt.xticks(rotation=45, ha='right')
         plt.xlabel(Xlabel)
         plt.ylabel(Ylabel)
         plt.title('Bar Chart of ' + Xlabel + ' by ' + Ylabel)
@@ -302,6 +303,7 @@ def dashboard():
         plt.close()
     elif session.get('selected_option') == "Horizontal Bar Chart":
         plt.barh(names, Ylist)
+        plt.xticks(rotation=45, ha='right')
         plt.xlabel(Ylabel)
         plt.ylabel(Xlabel)
         plt.title('Horizontal Bar Chart of ' + Ylabel + ' by '+ Xlabel)
