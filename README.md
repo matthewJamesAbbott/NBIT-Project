@@ -80,7 +80,7 @@ pip install -r requirements.txt
 
 nano website/views.py
 
-replace INSERT KEY HERE with nanonets key save file and exit
+replace INSERT KEY HERE with nanonets key, save file and exit
 
 ## Insert Gmail address and app key
 
