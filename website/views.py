@@ -11,6 +11,8 @@ import matplotlib
 matplotlib.use('SVG')
 import seaborn as sns
 import re
+from textwrap import wrap
+
 
 # instantiate blueprint for website
 views = Blueprint('views', __name__)
@@ -298,7 +300,8 @@ def dashboard():
         plt.savefig('./website/static/images/chart.png', bbox_inches="tight")
         plt.close()
     elif session.get('selected_option') == "Bar Chart":
-        plt.bar(names, Ylist)
+        wrapped_labels = [ '\n'.join(wrap(l, 20)) for l in names]
+        plt.bar(wrapped_labels, Ylist)
         plt.xticks(rotation=45, ha='right', fontsize=6)
         plt.xlabel(Xlabel)
         plt.ylabel(Ylabel)
@@ -306,7 +309,8 @@ def dashboard():
         plt.savefig('./website/static/images/chart.png', bbox_inches="tight")
         plt.close()
     elif session.get('selected_option') == "Horizontal Bar Chart":
-        plt.barh(names, Ylist)
+        wrapped_labels = [ '\n'.join(wrap(l, 20)) for l in names]
+        plt.barh(wrapped_labels, Ylist)
         plt.xticks(rotation=45, ha='right', fontsize=12)
         plt.yticks(fontsize=6)
         plt.xlabel(Ylabel)
