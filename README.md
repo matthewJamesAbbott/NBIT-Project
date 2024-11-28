@@ -49,8 +49,8 @@ Settings: Users can customize the style of plots generated in the dashboard usin
 ## Contributors
 
 Matthew Abbott,
-Taylah Ryhanen,
-William Chairundin
+Editor Taylah Ryhanen,
+Associate William Chairundin
 
 # Installation
 
